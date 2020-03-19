@@ -1,0 +1,1 @@
+web: gunicorn "asl:create_app()"
