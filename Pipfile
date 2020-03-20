@@ -7,6 +7,7 @@ verify_ssl = true
 
 [packages]
 flask = "*"
+tensorflow = "==1.15.0"
 
 [requires]
 python_version = "3.7"
