@@ -1,9 +1,11 @@
-from flask import Flask, request
+import tensorflow as tf
+import numpy as np
+from flask import Flask, request, jsonify
 from .models import initial_model
 from .utilities import process_img
 
-model = initial_model()  # created upon deployment instead of every call of predict
 
+model = initial_model()  # created upon deployment instead of every call of predict
 
 def create_app():
     
@@ -21,6 +23,8 @@ def create_app():
         """
         image_file = request.files['file']
         processed_image = process_img(image_file)
-        return model.predict([[processed_image]])
+        output = model.predict([[processed_image]])
+        output = output.tolist() # plays nice with JSONIFY
+        return jsonify(output)
 
     return app
