@@ -1,4 +1,6 @@
-# Tech Stack
+# General Info
+
+### Tech Stack
 
 Python, Flask, AWS Elastic Beanstalk, Tensorflow
 
