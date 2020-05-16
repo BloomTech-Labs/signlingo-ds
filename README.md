@@ -6,6 +6,7 @@ Python, Flask, AWS Elastic Beanstalk, Tensorflow
 
 - Labs 22 used _______ Kaggle dataset. Can be found here ________________
 - Contact ____ for credentials to the drive that contains the photos Labs 24 used to train.
+- Go into file structure of drive here
 
 # Model
 
