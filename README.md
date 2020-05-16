@@ -42,7 +42,7 @@ File Structure:
 
 ### How to connect to the web API
 
-- List directions on how to connect to the API here
+- API endpoints, what they expect, and what they return
 
 ### How to connect to the data API
 
