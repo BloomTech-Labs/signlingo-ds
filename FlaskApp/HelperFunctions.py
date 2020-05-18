@@ -1,5 +1,7 @@
 import cv2
 import os
+import json
+import numpy as np
 
 # def extractFrames(pathIn, pathOut):
 #     os.mkdir('images/')
@@ -21,6 +23,13 @@ import os
 #
 # cap.release()
 # cv2.destroyAllWindows()
+
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
+
 
 def splitter(video):
     cap = cv2.VideoCapture(video)
