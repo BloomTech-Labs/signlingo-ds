@@ -1,9 +1,10 @@
-from flask import Flask, request, send_file, render_template
+from flask import Flask, request, render_template, flash, redirect
+from werkzeug.utils import secure_filename
 from flask import jsonify
-import json, codecs
+import os
 
-from HelperFunctions import NumpyEncoder
-import cv2
+from HelperFunctions import splitter, clear_temp, allowed_file
+
 
 app = Flask(__name__, template_folder='templates')
 
@@ -13,36 +14,41 @@ def home():
 
 @app.route('/api', methods=['POST'])
 def api():
-    video = request.files['video']
-    video = "2020-05-14_14-55-47.mp4"
-    frames = splitter(video)
+    if request.method == 'POST':
+        # Checks to make sure a file was actually received with the key 'video'
+        if 'video' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        video = request.files['video']
+
+        # Checks to make sure the video has a filename.
+        if video.filename == '':
+            flash('No Selected File')
+            return redirect(request.url)
 
 
-    json_dump = json.dumps(frames[0], cls=NumpyEncoder)
-    print(json_dump)
-    #video = video['video'].read()
-    #video = request.form['video']
-    # video2 = request.files['video']
-    #print(video)
+        if video and allowed_file(video.filename): # If a video exists and it's of an appropriate type
+            filename = secure_filename(video.filename) # Apparently a good method to use to make sure no one can do silly things with filenames.
+            video.save(os.path.join('TEMPVID','test_' + filename)) #Saves our video file to the TEMPVID folder.
+            print('Video saved.\n')
 
-    return json_dump
-    #return render_template("display.html", video=video)
-    #return send_file(video)
+        for vid in os.listdir('TEMPVID'):
+            splitter(vid, frameskip=10) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
 
-def splitter(video):
-    cap = cv2.VideoCapture(video)
+        print("Files in temporary folder:")
+        print("Temp Video folder contents:", os.listdir('TEMPVID'))
+        print("Number of files in TEMPPICS:", len(os.listdir('TEMPPICS')), '\n')
 
-    count = 0
-    frame_list = []
-    while (cap.isOpened()):
-        ret, frame = cap.read()
-        # print(ret)
+        #Actual DS magic happens here.
+        predict_list = [('a', 0.443), ('a', 0.852), ('s',0.241), ('m', 0.159)] #Clear this out before actually making predictions. Data here is for testing.
+        # for img in os.listdir('TEMPPICS'):
+        #     predict_list.append(model.predict(img)) #Or however we want to predict the result.
 
-        if ret:
-            #print('Read %d frame: ' % count, ret)
-            frame_list.append(frame)
-            count += 1
-        else:
-            break
+        clear_temp() # Helper function that clears both of the temporary folders.
 
-    return frame_list
+        print("Temp folders cleared.")
+        print("Temp Video folder contents:", os.listdir('TEMPVID'))
+        print("Number of files in TEMPPICS:", len(os.listdir('TEMPPICS')), '\n')
+
+
+        return jsonify(predict_list) # Or some variant thereof
