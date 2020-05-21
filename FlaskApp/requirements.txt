@@ -1,6 +1,6 @@
-numpy
-flask
-pybase64
-opencv-python
-jsonpickle
-pillow
+numpy==1.18.4
+flask==1.1.2
+pybase64==1.0.1
+opencv-python==4.2.0.34
+jsonpickle==1.4.1
+pillow==7.1.2
