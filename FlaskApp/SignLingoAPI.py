@@ -4,7 +4,7 @@ from flask import jsonify
 import os, time
 
 from HelperFunctions import splitter, clear_temp, allowed_file
-from detector import main as img_detector
+from ModelFunctions import main as img_detector
 
 
 app = Flask(__name__, template_folder='templates')
