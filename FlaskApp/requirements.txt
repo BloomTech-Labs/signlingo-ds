@@ -1,0 +1,6 @@
+numpy
+flask
+pybase64
+opencv-python
+jsonpickle
+pillow
