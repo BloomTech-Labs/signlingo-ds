@@ -9,7 +9,7 @@ def get_labels(labels_path):
     """
     Loads the labels used by our YOLO model
     """
-    lpath = os.path.sep.join([YOLO_PATH, labels_path])
+    lpath = os.path.sep.join(['./model', 'alphabet.names'])
     LABELS = open(lpath).read().strip().split("\n")
     return LABELS
 
@@ -25,14 +25,14 @@ def get_weights(weights_path):
     """
     Loads the weights used by the YOLO model.
     """
-    weightsPath = os.path.sep.join([YOLO_PATH, weights_path])
+    weightsPath = os.path.sep.join(['./model', 'alphabet.weights'])
     return weightsPath
 
 def get_config(config_path):
     """
     Gets the config used by the YOLO model.
     """
-    configPath = os.path.sep.join([YOLO_PATH, config_path])
+    configPath = os.path.sep.join(['./model', 'alphabet.cfg'])
     return configPath
 
 def load_model(config_path, weights_path):

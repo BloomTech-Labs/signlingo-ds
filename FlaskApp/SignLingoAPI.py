@@ -64,3 +64,13 @@ def api():
         print("TOTAL RUN TIME = ", (end_time - start_time))
         return str(x)
         #return jsonify(predict_list) # Or some variant thereof
+
+
+import random
+
+@app.route('/test_api', methods=['POST'])
+def test_api():
+    video = request.files['video']
+    random_bit = random.getrandbits(1)
+    random_boolean = [bool(random_bit)]
+    return jsonify(random_boolean)
