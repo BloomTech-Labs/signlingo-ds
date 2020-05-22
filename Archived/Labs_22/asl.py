@@ -7,7 +7,7 @@ from utilities import process_img
 
 model = best_current_model()  # created upon deployment instead of every call of predict
 
-
+/*
 def create_app():
     
     app = Flask(__name__)
@@ -29,3 +29,4 @@ def create_app():
         return jsonify(output)
 
     return app
+*/
