@@ -8,9 +8,9 @@ from utilities import process_img
 model = best_current_model()  # created upon deployment instead of every call of predict
 
 /*
-def create_app():
+#def create_app():
     
-    app = Flask(__name__)
+ #   app = Flask(__name__)
 
     @app.route('/')
     def root():
@@ -28,5 +28,5 @@ def create_app():
         output = output.tolist()  # plays nice with JSONIFY
         return jsonify(output)
 
-    return app
+    #return app
 */
