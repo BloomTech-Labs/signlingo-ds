@@ -4,3 +4,5 @@ pybase64
 opencv-python
 jsonpickle
 pillow
+uvicorn
+gunicorn
