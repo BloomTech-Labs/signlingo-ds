@@ -7,7 +7,7 @@ from HelperFunctions import splitter, clear_temp, allowed_file
 from ModelFunctions import main as img_detector
 
 
-app = Flask(__name__, template_folder='templates')
+application = Flask(__name__, template_folder='templates')
 if not os.path.isdir('TEMPPICS'):
     os.mkdir('TEMPPICS')
 if not os.path.isdir('TEMPVID'):
