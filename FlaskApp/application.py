@@ -14,11 +14,11 @@ if not os.path.isdir('TEMPVID'):
     os.mkdir('TEMPVID')
 
 
-@app.route('/')
+@application.route('/')
 def home():
     return render_template("index.html")
 
-@app.route('/api', methods=['POST'])
+@application.route('/api', methods=['POST'])
 def api():
     start_time = time.time()
     if request.method == 'POST':
@@ -68,7 +68,7 @@ def api():
 
 import random
 
-@app.route('/test_api', methods=['POST'])
+@application.route('/test_api', methods=['POST'])
 def test_api():
     video = request.files['video']
     # random_bit = random.getrandbits(1)
