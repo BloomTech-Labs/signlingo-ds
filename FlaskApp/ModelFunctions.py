@@ -1,5 +1,5 @@
 import numpy as np
-import argparse, time, cv2, os
+import argparse, time, os #, cv2
 
 CONF_THRES=0.01 # Confidence Threshold for detection reporting.
 NMS_THRES=0.1 # Non-Maxima Suppression threshold, shouldn't need to be changed.
