@@ -72,5 +72,5 @@ import random
 def test_api():
     video = request.files['video']
     random_bit = random.getrandbits(1)
-    random_boolean = [bool(random_bit)]
-    return random_boolean
+    random_boolean = bool(random_bit)
+    return jsonify({'Random Test Boolean':random_boolean})
