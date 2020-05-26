@@ -8,9 +8,7 @@ verify_ssl = true
 [packages]
 numpy = "*"
 pybase64 = "*"
-opencv-python = "*"
 jsonpickle = "*"
-uvicorn = "*"
 gunicorn = "*"
 Flask = "*"
 Pillow = "*"
