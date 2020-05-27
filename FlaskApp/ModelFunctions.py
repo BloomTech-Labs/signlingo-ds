@@ -1,5 +1,5 @@
 import numpy as np
-import argparse, time, os #, cv2
+import argparse, time, os, cv2
 
 CONF_THRES=0.01 # Confidence Threshold for detection reporting.
 NMS_THRES=0.1 # Non-Maxima Suppression threshold, shouldn't need to be changed.
@@ -129,8 +129,8 @@ def get_prediction(image, net, LABELS, COLORS):
 
 def main():
     labels_path = os.path.join('detector_dependencies','names.list')
-    cfg_path = os.path.join('detector_dependencies', 'yolov3_custom_test.cfg')
-    weights_path = os.path.join('detector_dependencies', 'yolov3_custom_4000.weights')
+    cfg_path = os.path.join('detector_dependencies', 'alphabet.cfg')
+    weights_path = os.path.join('detector_dependencies', 'alphabet.weights')
 
     labels = get_labels(labels_path)
     config = get_config(cfg_path)

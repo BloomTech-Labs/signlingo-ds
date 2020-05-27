@@ -8,7 +8,7 @@ import shutil
 class TestStringMethods(unittest.TestCase):
 
     """ ------------------------------ 
-    ------- HelperFunctions.py -------
+    ------- application.py -------
     -------------------------------"""
     # TEST DUMMY ROUTE
     def test_api(self):
@@ -16,6 +16,9 @@ class TestStringMethods(unittest.TestCase):
         random_boolean = bool(random_bit)
         self.assertTrue(type(random_boolean) == bool)
 
+    """ ------------------------------ 
+    ------- HelperFunctions.py -------
+    -------------------------------"""
     # TEST SPLITTER
     def test_splitter(self):
         """
@@ -26,7 +29,7 @@ class TestStringMethods(unittest.TestCase):
         destination = "TEMPVID/2020-05-14_14-55-47.mp4"
         shutil.copyfile(source, destination)
 
-        splitter("2020-05-14_14-55-47.mp4")
+        splitter("2020-05-14_14-55-47.mp4", frameskip=50)
 
         self.assertTrue(len(os.listdir('TEMPPICS')) >= 1)
         clear_temp()
@@ -42,7 +45,6 @@ class TestStringMethods(unittest.TestCase):
         clear_temp()
         self.assertTrue(len(os.listdir('TEMPPICS')) == 0)
         self.assertTrue(len(os.listdir('TEMPVID')) == 0)
-
 
     """ ------------------------------ 
     ------- ModelFunctions.py -------
