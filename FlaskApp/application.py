@@ -9,6 +9,8 @@ import random
 
 
 application = Flask(__name__, template_folder='templates')
+
+# potential hurdle. multiple users same folder?
 if not os.path.isdir('TEMPPICS'):
     os.mkdir('TEMPPICS')
 if not os.path.isdir('TEMPVID'):

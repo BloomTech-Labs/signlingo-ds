@@ -1,27 +1,54 @@
 import unittest
 import random
+from HelperFunctions import allowed_file, clear_temp, splitter
+import os
+import cv2
+import shutil
 
 class TestStringMethods(unittest.TestCase):
 
-    # def test_upper(self):
-    #     self.assertEqual('foo'.upper(), 'FOO')
-
-    # def test_isupper(self):
-    #     self.assertTrue('FOO'.isupper())
-    #     self.assertFalse('Foo'.isupper())
-
-    # def test_split(self):
-    #     s = 'hello world'
-    #     self.assertEqual(s.split(), ['hello', 'world'])
-    #     # check that s.split fails when the separator is not a string
-    #     with self.assertRaises(TypeError):
-    #         s.split(2)
-
+    """ ------------------------------ 
+    ------- HelperFunctions.py -------
+    -------------------------------"""
+    # TEST DUMMY ROUTE
     def test_api(self):
         random_bit = random.getrandbits(1)
         random_boolean = bool(random_bit)
-        
         self.assertTrue(type(random_boolean) == bool)
+
+    # TEST SPLITTER
+    def test_splitter(self):
+        """
+        Copies testing video to the TEMPVID folder, runs the splitter function, checks that frames are extracted to the TEMPPICS FOLDER.
+        """
+        source = "2020-05-14_14-55-47.mp4"
+        destination = "TEMPVID/2020-05-14_14-55-47.mp4"
+        shutil.copyfile(source, destination)
+
+        splitter("2020-05-14_14-55-47.mp4")
+
+        self.assertTrue(len(os.listdir('TEMPPICS')) >= 1)
+        clear_temp()
+        self.assertTrue(len(os.listdir('TEMPPICS')) == 0)
+
+    # TEST ALLOWED FILE
+    def test_allowed_file(self):
+        self.assertTrue(allowed_file('fake_file_name.mp4'))
+        self.assertFalse(allowed_file('fake_file_name.png'))
+ 
+    # TEST CLEAR TEMP
+    def test_clear_temp(self):
+        clear_temp()
+        self.assertTrue(len(os.listdir('TEMPPICS')) == 0)
+        self.assertTrue(len(os.listdir('TEMPVID')) == 0)
+
+
+    """ ------------------------------ 
+    ------- ModelFunctions.py -------
+    -------------------------------"""
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
