@@ -19,7 +19,8 @@ class TestStringMethods(unittest.TestCase):
     # TEST SPLITTER
     def test_splitter(self):
         """
-        Copies testing video to the TEMPVID folder, runs the splitter function, checks that frames are extracted to the TEMPPICS FOLDER.
+        Copies testing video to the TEMPVID folder, runs the splitter function,
+        and checks that frames are extracted to the TEMPPICS FOLDER.
         """
         source = "2020-05-14_14-55-47.mp4"
         destination = "TEMPVID/2020-05-14_14-55-47.mp4"
