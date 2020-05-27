@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 from flask import jsonify
 import os, time
 import random
+import json
 
 from HelperFunctions import splitter, clear_temp, allowed_file
 from ModelFunctions import main as img_detector
@@ -38,6 +39,7 @@ def api():
         flash('No file part')
         return reThedirect(request.url)
     video = request.files['video']
+    letter = request.form.get('expected')
 
     # Checks to make sure the video has a filename.
     if video.filename == '':
@@ -49,12 +51,61 @@ def api():
         video.save(os.path.join('TEMPVID','test_' + filename)) #Saves our video file to the TEMPVID folder.
 
     for vid in os.listdir('TEMPVID'):
-        splitter(vid, frameskip=30) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
+        splitter(vid, frameskip=10) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
 
     # Actual DS magic happens here.
     classes, confidences = img_detector()
-    x = list(zip(classes, confidences))
+    predictions = list(zip(classes, confidences))
     clear_temp() # Helper function that clears both of the temporary folders.
     end_time = time.time()
     
-    return str(x)
+    Dictionary = {
+        'A': 0,
+        'B': 1,
+        'C': 2,
+        'D': 3,
+        'E': 4,
+        'F': 5,
+        'G': 6,
+        'H': 7,
+        'I': 8,
+        'J': 9,
+        'K': 10,
+        'L': 11,
+        'M': 12,
+        'N': 13,
+        'O': 14,
+        'P': 15,
+        'Q': 16,
+        'R': 17,
+        'S': 18,
+        'T': 19,
+        'U': 20,
+        'V': 21,
+        'W': 22,
+        'X': 23,
+        'Y': 24,
+        'Z': 25,
+    }
+
+    testing_list = []
+    
+    for double in predictions:
+        holding_array = []
+        for individual in double:
+            if len(individual) != 0:
+                holding_array.append(float(individual[0]))
+        testing_list.append(holding_array)
+
+    X = json.dumps(testing_list)
+
+    # Check that predictions match expected
+    is_match = False
+
+    if Dictionary[letter] == testing_list[0][0]:
+        is_match = True
+
+    print(Dictionary[letter])
+    print(testing_list[0][0])
+    print('COOPER VOS IS E', is_match)
+    return Response(X,  mimetype='application/json')

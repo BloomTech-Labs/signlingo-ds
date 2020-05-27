@@ -16,6 +16,7 @@ Create a virtual environment.
 `pipenv install -r requirements.txt`
 Run the following to initialize the TEMPVID and TEMPPICS folders
 `python application.py`
+Upload the model weights and cfg files to the FlaskApp/model folder
 Launching the flask app (NOTE: depending on the terminal, export can be substituted for set)
 `export FLASK_APP=SignLingoAPI.py`
 `flask run`

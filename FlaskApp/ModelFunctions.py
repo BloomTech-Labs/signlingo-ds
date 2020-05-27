@@ -1,38 +1,41 @@
 import numpy as np
 import argparse, time, os, cv2
 
-CONF_THRES=0.01 # Confidence Threshold for detection reporting.
+CONF_THRES=0.0001 # Confidence Threshold for detection reporting.
 NMS_THRES=0.1 # Non-Maxima Suppression threshold, shouldn't need to be changed.
 YOLO_PATH="./"
+LABELS = 'alphabet.names'
+WEIGHTS = 'alphabet.weights'
+CFG = 'alphabet.cfg'
 
 def get_labels(labels_path):
     """
     Loads the labels used by our YOLO model
     """
-    lpath = os.path.sep.join(['./model', 'alphabet.names'])
-    LABELS = open(lpath).read().strip().split("\n")
-    return LABELS
+    lpath = os.path.sep.join(['./model', LABELS])
+    labels = open(lpath).read().strip().split("\n")
+    return labels
 
-def get_colors(LABELS):
+def get_colors(labels):
     """
     Initializes a list of colors to represent each possible class label.
     """
     np.random.seed(1337)
-    COLORS = np.random.randint(0, 255, size=(len(LABELS), 3), dtype="uint8")
+    COLORS = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
     return COLORS
 
 def get_weights(weights_path):
     """
     Loads the weights used by the YOLO model.
     """
-    weightsPath = os.path.sep.join(['./model', 'alphabet.weights'])
+    weightsPath = os.path.sep.join(['./model', WEIGHTS])
     return weightsPath
 
 def get_config(config_path):
     """
     Gets the config used by the YOLO model.
     """
-    configPath = os.path.sep.join(['./model', 'alphabet.cfg'])
+    configPath = os.path.sep.join(['./model', CFG])
     return configPath
 
 def load_model(config_path, weights_path):
@@ -47,7 +50,7 @@ def get_prediction(image, net, LABELS, COLORS):
     """
     Gets prediction from the image
     """
-
+    
     #Getting image height/width
     (img_height, img_width) = image.shape[:2]
 
@@ -127,10 +130,12 @@ def get_prediction(image, net, LABELS, COLORS):
 
     return image, class_ids, confidences
 
+
+
 def main():
-    labels_path = os.path.join('detector_dependencies','names.list')
-    cfg_path = os.path.join('detector_dependencies', 'alphabet.cfg')
-    weights_path = os.path.join('detector_dependencies', 'alphabet.weights')
+    labels_path = os.path.join('model', LABELS)
+    cfg_path = os.path.join('model', CFG)
+    weights_path = os.path.join('model', WEIGHTS)
 
     labels = get_labels(labels_path)
     config = get_config(cfg_path)
@@ -151,8 +156,8 @@ def main():
         print("Predicted class ids:", class_ids)
         print("Predicted confidence levels", confidences)
 
-        cv2.imshow("Image", result_img)
-        cv2.waitKey()
+        # cv2.imshow("Image", result_img)
+        # cv2.waitKey()
 
     return classes, confids
 
