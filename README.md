@@ -14,6 +14,8 @@ Create and navigate to a working directory and run the following.
 Create a virtual environment.
 `pipenv shell --python 3.7`
 `pipenv install -r requirements.txt`
+Run the following to initialize the TEMPVID and TEMPPICS folders
+`python application.py`
 Launching the flask app (NOTE: depending on the terminal, export can be substituted for set)
 `export FLASK_APP=SignLingoAPI.py`
 `flask run`
