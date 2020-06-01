@@ -102,7 +102,7 @@ def api():
     # Check that predictions match expected
     is_match = False
 
-    if len(testing_list[0] != 0):
+    if len(testing_list[0]) != 0:
         if Dictionary[letter] == testing_list[0][0]:
             is_match = True
 
