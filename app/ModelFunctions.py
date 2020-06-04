@@ -151,18 +151,26 @@ def main():
     colors = get_colors(labels)
     classes = []
     confids = []
+
+    count = 0
     for img in os.listdir('TEMPPICS'):
-        image = cv2.imread(os.path.join('TEMPPICS', img))
+        if count == round(len(os.listdir('TEMPPICS'))/2): #Grabs the middle image for single image testing
 
-        result_img, class_ids, confidences = get_prediction(image, nets, labels, colors)
-        classes.append(class_ids)
-        confids.append(confidences)
+            image = cv2.imread(os.path.join('TEMPPICS', img))
 
-        print("Predicted class ids:", class_ids)
-        print("Predicted confidence levels", confidences)
+            result_img, class_ids, confidences = get_prediction(image, nets, labels, colors)
+            classes.append(class_ids)
+            confids.append(confidences)
 
-        # cv2.imshow("Image", result_img)
-        # cv2.waitKey()
+            print("Predicted class ids:", class_ids)
+            print("Predicted confidence levels", confidences)
+
+            # cv2.imshow("Image", result_img)
+            # cv2.waitKey()
+            count += 1
+        else:
+            count += 1
+
     main_end_time = time.time()
     print(f"Main loop finished in {(main_end_time - main_start_time):.2f} seconds")
     return classes, confids

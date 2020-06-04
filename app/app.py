@@ -99,6 +99,7 @@ def api():
             if len(individual) != 0:
                 holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
+    testing_list.append(f"Time of operation: {(end_time-start_time):.3f} seconds")
 
     X = json.dumps(testing_list)
 
