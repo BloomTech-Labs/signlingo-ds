@@ -1,3 +1,5 @@
+# Concurrency is a problem, and there will be a 502 error if two requests come in at the same time.
+
 from flask import Flask, request, render_template, flash, redirect, Response
 from werkzeug.utils import secure_filename
 from flask import jsonify
@@ -32,6 +34,7 @@ def test_api():
 
 @app.route('/api', methods=['POST'])
 def api():
+    print("/api post request received")
     start_time = time.time()
     
     # Checks to make sure a file was actually received with the key 'video'
@@ -40,15 +43,21 @@ def api():
         return redirect(request.url)
     video = request.files['video']
     letter = request.form.get('expected')
+    letter = letter.upper()
 
     # Checks to make sure the video has a filename.
-    if video.filename == '':
-        flash('No Selected File')
-        return redirect(request.url)
+    # if video.filename == '':
+    #     flash('No Selected File')
+    #     return redirect(request.url)
 
-    if video and allowed_file(video.filename): # If a video exists and it's of an appropriate type
+    if video: # and allowed_file(video.filename): # If a video exists and it's of an appropriate type
+        print("Video Filename:", video.filename)
         filename = secure_filename(video.filename) # Apparently a good method to use to make sure no one can do silly things with filenames.
         video.save(os.path.join('TEMPVID','test_' + filename)) #Saves our video file to the TEMPVID folder.
+        print(f"Did video save? {len(os.listdir('TEMPVID'))>0}")
+    else:
+        flash('File of incorrect type.')
+        return redirect(request.url)
 
     splitter_start_time = time.time()
     for vid in os.listdir('TEMPVID'):
@@ -92,15 +101,20 @@ def api():
     }
 
     testing_list = []
-    
+    print("Predictions-\n",predictions)
     for double in predictions:
+        print("Double", double)
         holding_array = []
         for individual in double:
+            print("Individual", individual)
             if len(individual) != 0:
                 holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
 
-    X = json.dumps(testing_list)
+    testing_list.append([f"Time of operation: {(end_time-start_time):.3f} seconds"])
+    print("Testing List", testing_list)
+
+
 
     # Check that predictions match expected
     is_match = False
@@ -109,6 +123,17 @@ def api():
         if Dictionary[letter] == testing_list[0][0]:
             is_match = True
 
+    if len(testing_list[0]) > 1:
+        predicted_letter = testing_list[0][0]
+        confidence = testing_list[0][1]
+    else:
+        predicted_letter = "No prediction"
+        confidence = 0
+    runtime = end_time-start_time
+    testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime )
+
+
+    X = json.dumps(testing_list)
     # print(Dictionary[letter])
     # print(testing_list[0][0])
     # print('COOPER VOS IS E', is_match)
