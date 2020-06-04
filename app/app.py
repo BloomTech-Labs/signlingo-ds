@@ -1,3 +1,5 @@
+# Concurrency is a problem, and there will be a 502 error if two requests come in at the same time.
+
 from flask import Flask, request, render_template, flash, redirect, Response
 from werkzeug.utils import secure_filename
 from flask import jsonify
@@ -121,7 +123,11 @@ def api():
         if Dictionary[letter] == testing_list[0][0]:
             is_match = True
 
-    testing_list[0] = (letter, is_match)
+    if len(testing_list[0]) > 1:
+        confidence = testing_list[0][1]
+    else:
+        confidence = 0
+    testing_list[0] = (letter, is_match, confidence)
 
 
     X = json.dumps(testing_list)
