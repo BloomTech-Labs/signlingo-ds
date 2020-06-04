@@ -40,6 +40,7 @@ def api():
         return redirect(request.url)
     video = request.files['video']
     letter = request.form.get('expected')
+    letter = letter.upper()
 
     # Checks to make sure the video has a filename.
     if video.filename == '':
@@ -101,7 +102,7 @@ def api():
         testing_list.append(holding_array)
     testing_list.append(f"Time of operation: {(end_time-start_time):.3f} seconds")
 
-    X = json.dumps(testing_list)
+
 
     # Check that predictions match expected
     is_match = False
@@ -110,6 +111,10 @@ def api():
         if Dictionary[letter] == testing_list[0][0]:
             is_match = True
 
+    testing_list[0] = (letter, is_match)
+
+
+    X = json.dumps(testing_list)
     # print(Dictionary[letter])
     # print(testing_list[0][0])
     # print('COOPER VOS IS E', is_match)
