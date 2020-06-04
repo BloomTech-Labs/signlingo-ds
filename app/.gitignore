@@ -1,0 +1,10 @@
+TEMPPICS
+TEMPVID
+model/alphabet.cfg
+model/alphabet.weights
+model/alphabet.names
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
