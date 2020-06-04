@@ -32,6 +32,7 @@ def test_api():
 
 @app.route('/api', methods=['POST'])
 def api():
+    print("/api post request received")
     start_time = time.time()
     
     # Checks to make sure a file was actually received with the key 'video'
@@ -50,8 +51,14 @@ def api():
     if video and allowed_file(video.filename): # If a video exists and it's of an appropriate type
         filename = secure_filename(video.filename) # Apparently a good method to use to make sure no one can do silly things with filenames.
         video.save(os.path.join('TEMPVID','test_' + filename)) #Saves our video file to the TEMPVID folder.
+    else:
+        flash('File of incorrect type.')
+        print("Video", video)
+        print(video.filename)
+        return redirect(request.url)
 
     splitter_start_time = time.time()
+    print("Length of Tempvid Folder:", len(os.listdir('TEMPVID')))
     for vid in os.listdir('TEMPVID'):
         splitter(vid, frameskip=10) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
     splitter_end_time = time.time()
@@ -93,13 +100,16 @@ def api():
     }
 
     testing_list = []
-    
+    print("Predictions-\n",predictions)
     for double in predictions:
+        print("Double", double)
         holding_array = []
         for individual in double:
+            print("Individual", individual)
             if len(individual) != 0:
                 holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
+
     testing_list.append(f"Time of operation: {(end_time-start_time):.3f} seconds")
 
 
