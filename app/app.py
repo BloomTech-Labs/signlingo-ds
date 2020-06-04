@@ -124,10 +124,13 @@ def api():
             is_match = True
 
     if len(testing_list[0]) > 1:
+        predicted_letter = testing_list[0][0]
         confidence = testing_list[0][1]
     else:
+        predicted_letter = "No prediction"
         confidence = 0
-    testing_list[0] = (letter, is_match, confidence)
+    runtime = end_time-start_time
+    testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime )
 
 
     X = json.dumps(testing_list)
