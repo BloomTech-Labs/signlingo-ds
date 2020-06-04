@@ -43,7 +43,10 @@ def load_model(config_path, weights_path):
     Loads the model
     """
     print("[INFO] loading YOLO...")
+    model_load_start_time = time.time()
     net = cv2.dnn.readNetFromDarknet(config_path, weights_path)
+    model_load_end_time = time.time()
+    print('[INFO] Model Loading time -', model_load_end_time-model_load_start_time, " seconds.")
     return net
 
 def get_prediction(image, net, LABELS, COLORS):
@@ -52,6 +55,7 @@ def get_prediction(image, net, LABELS, COLORS):
     """
     
     #Getting image height/width
+    prediction_start_time = time.time()
     (img_height, img_width) = image.shape[:2]
 
     #Determining output layer names
@@ -68,12 +72,10 @@ def get_prediction(image, net, LABELS, COLORS):
 
     layer_outputs = net.forward(output_layer_names)
 
-    #print("Layer Outputs:\n", layer_outputs)
-
     end = time.time()
 
     #Show timing info
-    print("[INFO] YOLO took {:.6f} seconds.".format(end - start))
+    print(f"[INFO] YOLO took {(end - start):.6f} seconds on net.forward step.")
 
     #Initializing our list of bounding boxes, confidences, and class ids.
     b_boxes = []
@@ -127,12 +129,15 @@ def get_prediction(image, net, LABELS, COLORS):
             text = "{}: {:.4f}".format(LABELS[class_ids[i]], confidences[i])
 
             cv2.putText(image, text, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+    prediction_end_time = time.time()
+    print(f"Image prediction time {(prediction_end_time - prediction_start_time):.2f} seconds")
 
     return image, class_ids, confidences
 
 
 
 def main():
+    main_start_time = time.time()
     labels_path = os.path.join('model', LABELS)
     cfg_path = os.path.join('model', CFG)
     weights_path = os.path.join('model', WEIGHTS)
@@ -158,7 +163,8 @@ def main():
 
         # cv2.imshow("Image", result_img)
         # cv2.waitKey()
-
+    main_end_time = time.time()
+    print(f"Main loop finished in {(main_end_time - main_start_time):.2f} seconds")
     return classes, confids
 
 

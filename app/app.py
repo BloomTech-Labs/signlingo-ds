@@ -37,7 +37,7 @@ def api():
     # Checks to make sure a file was actually received with the key 'video'
     if 'video' not in request.files:
         flash('No file part')
-        return reThedirect(request.url)
+        return redirect(request.url)
     video = request.files['video']
     letter = request.form.get('expected')
 
@@ -50,8 +50,11 @@ def api():
         filename = secure_filename(video.filename) # Apparently a good method to use to make sure no one can do silly things with filenames.
         video.save(os.path.join('TEMPVID','test_' + filename)) #Saves our video file to the TEMPVID folder.
 
+    splitter_start_time = time.time()
     for vid in os.listdir('TEMPVID'):
         splitter(vid, frameskip=10) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
+    splitter_end_time = time.time()
+    print(f"Total Splitter runtime - {(splitter_end_time - splitter_start_time):.2f} seconds")
 
     # Actual DS magic happens here.
     classes, confidences = img_detector()
