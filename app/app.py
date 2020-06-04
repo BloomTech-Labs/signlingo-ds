@@ -44,21 +44,20 @@ def api():
     letter = letter.upper()
 
     # Checks to make sure the video has a filename.
-    if video.filename == '':
-        flash('No Selected File')
-        return redirect(request.url)
+    # if video.filename == '':
+    #     flash('No Selected File')
+    #     return redirect(request.url)
 
-    if video and allowed_file(video.filename): # If a video exists and it's of an appropriate type
+    if video: # and allowed_file(video.filename): # If a video exists and it's of an appropriate type
+        print("Video Filename:", video.filename)
         filename = secure_filename(video.filename) # Apparently a good method to use to make sure no one can do silly things with filenames.
         video.save(os.path.join('TEMPVID','test_' + filename)) #Saves our video file to the TEMPVID folder.
+        print(f"Did video save? {len(os.listdir('TEMPVID'))>0}")
     else:
         flash('File of incorrect type.')
-        print("Video", video)
-        print(video.filename)
         return redirect(request.url)
 
     splitter_start_time = time.time()
-    print("Length of Tempvid Folder:", len(os.listdir('TEMPVID')))
     for vid in os.listdir('TEMPVID'):
         splitter(vid, frameskip=10) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
     splitter_end_time = time.time()
@@ -110,7 +109,8 @@ def api():
                 holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
 
-    testing_list.append(f"Time of operation: {(end_time-start_time):.3f} seconds")
+    testing_list.append([f"Time of operation: {(end_time-start_time):.3f} seconds"])
+    print("Testing List", testing_list)
 
 
 
