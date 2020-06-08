@@ -7,7 +7,7 @@ import os, time
 import random
 import json
 
-from HelperFunctions import splitter, clear_temp, allowed_file
+from HelperFunctions import splitter, clear_temp, allowed_file, create_uuid
 from ModelFunctions import main as img_detector
 
 app = Flask(__name__, template_folder='templates')
@@ -36,6 +36,8 @@ def test_api():
 def api():
     print("/api post request received")
     start_time = time.time()
+
+    uuid = create_uuid() # Helper function to create a unique identifier for this process.
     
     # Checks to make sure a file was actually received with the key 'video'
     if 'video' not in request.files:
@@ -53,22 +55,24 @@ def api():
     if video: # and allowed_file(video.filename): # If a video exists and it's of an appropriate type
         print("Video Filename:", video.filename)
         filename = secure_filename(video.filename) # Apparently a good method to use to make sure no one can do silly things with filenames.
-        video.save(os.path.join('TEMPVID','test_' + filename)) #Saves our video file to the TEMPVID folder.
-        print(f"Did video save? {len(os.listdir('TEMPVID'))>0}")
+        vid_path = os.path.join('TEMPVID', 'VID_'+ uuid)
+        print("Vid_path = ", vid_path)
+        os.mkdir(vid_path) # Creates the folder to be saved in.
+        video.save(os.path.join(vid_path, 'test_' + filename)) #Saves our video file to the TEMPVID folder.
     else:
         flash('File of incorrect type.')
         return redirect(request.url)
 
     splitter_start_time = time.time()
-    for vid in os.listdir('TEMPVID'):
-        splitter(vid, frameskip=10) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
+    for vid in os.listdir(vid_path):
+        splitter(vid, uuid, frameskip=10) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
     splitter_end_time = time.time()
     print(f"Total Splitter runtime - {(splitter_end_time - splitter_start_time):.2f} seconds")
 
     # Actual DS magic happens here.
-    classes, confidences = img_detector()
+    classes, confidences = img_detector(uuid)
     predictions = list(zip(classes, confidences))
-    clear_temp() # Helper function that clears both of the temporary folders.
+    clear_temp(uuid) # Helper function that clears both of the temporary folders.
     end_time = time.time()
     
     Dictionary = {
@@ -111,6 +115,7 @@ def api():
                 holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
 
+    #The line below only gets added if we have a true result... why?
     testing_list.append([f"Time of operation: {(end_time-start_time):.3f} seconds"])
     print("Testing List", testing_list)
 

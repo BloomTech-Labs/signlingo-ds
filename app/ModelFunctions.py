@@ -136,7 +136,7 @@ def get_prediction(image, net, LABELS, COLORS):
 
 
 
-def main():
+def main(uuid):
     main_start_time = time.time()
     labels_path = os.path.join('model', LABELS)
     cfg_path = os.path.join('model', CFG)
@@ -153,10 +153,11 @@ def main():
     confids = []
 
     count = 0
-    for img in os.listdir('TEMPPICS'):
-        if count == round(len(os.listdir('TEMPPICS'))/2): #Grabs the middle image for single image testing
+    pic_path = os.path.join('TEMPPICS', 'PICS_' + uuid)
+    for img in os.listdir(pic_path):
+        if count == round(len(os.listdir(pic_path))/2): #Grabs the middle image for single image testing
 
-            image = cv2.imread(os.path.join('TEMPPICS', img))
+            image = cv2.imread(os.path.join(pic_path, img))
 
             result_img, class_ids, confidences = get_prediction(image, nets, labels, colors)
             classes.append(class_ids)
@@ -177,5 +178,5 @@ def main():
 
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
