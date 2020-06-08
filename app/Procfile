@@ -1,1 +1,1 @@
-web: gunicorn application:application --workers 4
+web: gunicorn application:application --workers 4 --threads 2
