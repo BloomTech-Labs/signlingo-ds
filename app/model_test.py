@@ -19,16 +19,17 @@ WEBCAM_NUM = 2
 
 # Load yolo
 def load_yolo():
-    net = cv2.dnn.readNet("model/alphabet.weights", "model/alphabet.cfg")
+    net = cv2.dnn.readNet("model/yolov3-tiny_custom_final.weights", "model/yolov3-tiny_custom_test.cfg")
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
     classes = []
-    with open("model/alphabet.names", "r") as f:
+    with open("model/yolov3.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
+    print(len(classes))
 
     layers_names = net.getLayerNames()
     output_layers = [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-    colors = np.random.uniform(0, 255, size=(len(classes), 3))
+    colors = np.random.uniform(0, 255, size=(len(classes)+50, 3))
     return net, classes, colors, output_layers
 
 
@@ -71,7 +72,7 @@ def get_box_dimensions(outputs, height, width):
             scores = detect[5:]
             class_id = np.argmax(scores)
             conf = scores[class_id]
-            if conf > 0.5:
+            if conf > 0.0001:
                 center_x = int(detect[0] * width)
                 center_y = int(detect[1] * height)
                 w = int(detect[2] * width)
@@ -91,7 +92,8 @@ def draw_labels(boxes, confs, colors, class_ids, classes, img):
         if i in indexes:
             x, y, w, h = boxes[i]
             label = str(classes[class_ids[i]]) + f"  {confs[i]:.4f}"
-            color = colors[i]
+            #color = colors[i]
+            color = (200, 100, 200)
             cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
             cv2.putText(img, label, (x, y - 5), font, 1, color, 1)
     cv2.imshow("Image", img)

@@ -1,12 +1,13 @@
 import numpy as np
 import argparse, time, os, cv2
+#from memory_profiler import profile
 
 CONF_THRES=0.0001 # Confidence Threshold for detection reporting.
 NMS_THRES=0.1 # Non-Maxima Suppression threshold, shouldn't need to be changed.
 YOLO_PATH="./"
-LABELS = 'alphabet.names'
-WEIGHTS = 'alphabet.weights'
-CFG = 'alphabet.cfg'
+LABELS = 'yolov3.names'
+WEIGHTS = 'yolov3-tiny_custom_final.weights'
+CFG = 'yolov3-tiny_custom_test.cfg'
 
 def get_labels(labels_path):
     """
@@ -49,6 +50,7 @@ def load_model(config_path, weights_path):
     print('[INFO] Model Loading time -', model_load_end_time-model_load_start_time, " seconds.")
     return net
 
+#@profile
 def get_prediction(image, net, LABELS, COLORS):
     """
     Gets prediction from the image

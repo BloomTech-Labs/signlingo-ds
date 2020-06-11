@@ -6,9 +6,11 @@ from flask import jsonify
 import os, time
 import random
 import json
+from memory_profiler import profile
 
 from HelperFunctions import splitter, clear_temp, allowed_file, create_uuid
 from ModelFunctions import main as img_detector
+from ModelFunctions import LABELS, WEIGHTS, CFG
 
 app = Flask(__name__, template_folder='templates')
 
@@ -119,6 +121,8 @@ def api():
     testing_list.append([f"Time of operation: {(end_time-start_time):.3f} seconds"])
     print("Testing List", testing_list)
 
+    model_contents = [x for x in os.listdir('model')]
+    model_params = [LABELS, WEIGHTS, CFG]
 
 
     # Check that predictions match expected
@@ -135,7 +139,7 @@ def api():
         predicted_letter = "No prediction"
         confidence = 0
     runtime = end_time-start_time
-    testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime )
+    testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime, model_contents, model_params)
 
 
     X = json.dumps(testing_list)
