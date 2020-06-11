@@ -6,7 +6,7 @@ from flask import jsonify
 import os, time
 import random
 import json
-from memory_profiler import profile
+# from memory_profiler import profile
 
 from HelperFunctions import splitter, clear_temp, allowed_file, create_uuid
 from ModelFunctions import main as img_detector
