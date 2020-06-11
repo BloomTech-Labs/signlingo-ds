@@ -67,7 +67,7 @@ def api():
 
     splitter_start_time = time.time()
     for vid in os.listdir(vid_path):
-        splitter(vid, uuid, frameskip=10) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
+        splitter(vid, uuid, frameskip=15) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
     splitter_end_time = time.time()
     print(f"Total Splitter runtime - {(splitter_end_time - splitter_start_time):.2f} seconds")
 
@@ -109,10 +109,10 @@ def api():
     testing_list = []
     print("Predictions-\n",predictions)
     for double in predictions:
-        print("Double", double)
+        # print("Double", double)
         holding_array = []
         for individual in double:
-            print("Individual", individual)
+            # print("Individual", individual)
             if len(individual) != 0:
                 holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
@@ -139,7 +139,7 @@ def api():
         predicted_letter = "No prediction"
         confidence = 0
     runtime = end_time-start_time
-    testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime, model_contents, model_params)
+    testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime)
 
 
     X = json.dumps(testing_list)

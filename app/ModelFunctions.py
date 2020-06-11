@@ -157,22 +157,22 @@ def main(uuid):
     count = 0
     pic_path = os.path.join('TEMPPICS', 'PICS_' + uuid)
     for img in os.listdir(pic_path):
-        if count == round(len(os.listdir(pic_path))/2): #Grabs the middle image for single image testing
+        #if count == round(len(os.listdir(pic_path))/2): #Grabs the middle image for single image testing
 
-            image = cv2.imread(os.path.join(pic_path, img))
+        image = cv2.imread(os.path.join(pic_path, img))
 
-            result_img, class_ids, confidences = get_prediction(image, nets, labels, colors)
-            classes.append(class_ids)
-            confids.append(confidences)
+        result_img, class_ids, confidences = get_prediction(image, nets, labels, colors)
+        classes.append(class_ids)
+        confids.append(confidences)
 
-            print("Predicted class ids:", class_ids)
-            print("Predicted confidence levels", confidences)
+        # print("Predicted class ids:", class_ids)
+        # print("Predicted confidence levels", confidences)
 
-            # cv2.imshow("Image", result_img)
-            # cv2.waitKey()
-            count += 1
-        else:
-            count += 1
+        # cv2.imshow("Image", result_img)
+        # cv2.waitKey()
+        # count += 1
+        # else:
+        #     count += 1
 
     main_end_time = time.time()
     print(f"Main loop finished in {(main_end_time - main_start_time):.2f} seconds")
