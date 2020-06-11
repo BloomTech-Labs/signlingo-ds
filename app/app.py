@@ -105,6 +105,7 @@ def api():
         'Y': 24,
         'Z': 25,
     }
+    inverse = {v:k for k, v in Dictionary.items()}
 
     testing_list = []
     print("Predictions-\n",predictions)
@@ -114,12 +115,15 @@ def api():
         for individual in double:
             # print("Individual", individual)
             if len(individual) != 0:
-                holding_array.append(float(individual[0]))
+                if individual[0] == int(individual[0]):
+                    holding_array.append(inverse[individual[0]])
+                else:
+                    holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
 
     #The line below only gets added if we have a true result... why?
-    testing_list.append([f"Time of operation: {(end_time-start_time):.3f} seconds"])
-    print("Testing List", testing_list)
+    #testing_list.append([f"Time of operation: {(end_time-start_time):.3f} seconds"])
+    #print("Testing List", testing_list)
 
     model_contents = [x for x in os.listdir('model')]
     model_params = [LABELS, WEIGHTS, CFG]
@@ -139,10 +143,18 @@ def api():
         predicted_letter = "No prediction"
         confidence = 0
     runtime = end_time-start_time
+
+    return_dict = {'Wanted_Letter': letter,
+                   'is_match': is_match,
+                   'confidence': confidence,
+                   'predicted letter': predicted_letter,
+                   'runtime_seconds': runtime,
+                   'full_predictions' : testing_list
+                   }
+
     testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime)
 
-
-    X = json.dumps(testing_list)
+    X = json.dumps(return_dict)
     # print(Dictionary[letter])
     # print(testing_list[0][0])
     # print('COOPER VOS IS E', is_match)
