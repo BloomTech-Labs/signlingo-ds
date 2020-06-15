@@ -10,11 +10,7 @@ class TestStringMethods(unittest.TestCase):
     """ ------------------------------ 
     ------- application.py -------
     -------------------------------"""
-    # TEST DUMMY ROUTE
-    def test_api(self):
-        random_bit = random.getrandbits(1)
-        random_boolean = bool(random_bit)
-        self.assertTrue(type(random_boolean) == bool)
+    
 
     """ ------------------------------ 
     ------- HelperFunctions.py -------

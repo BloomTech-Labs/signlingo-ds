@@ -26,14 +26,6 @@ def home():
     return render_template("index.html")
 
 
-@app.route('/test_api', methods=['POST'])
-def test_api():
-    video = request.files['video']
-    random_bit = random.getrandbits(1)
-    random_boolean = bool(random_bit)
-    return jsonify({'Random Test Boolean':random_boolean})
-
-
 @app.route('/api', methods=['POST'])
 def api():
     print("/api post request received")
@@ -121,6 +113,7 @@ def api():
                     holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
 
+    print("KLSDJFLJKFSADLJKFSADLKJSDAFLJKAFDSJLLDFJKSLKJ",testing_list)
     #The line below only gets added if we have a true result... why?
     #testing_list.append([f"Time of operation: {(end_time-start_time):.3f} seconds"])
     #print("Testing List", testing_list)
@@ -132,27 +125,30 @@ def api():
     # Check that predictions match expected
     is_match = False
 
-    if len(testing_list[0]) != 0:
-        if Dictionary[letter] == testing_list[0][0]:
-            is_match = True
+    for pred in testing_list:
+        if len(pred) != 0:
+            if letter == pred[0]:
+                is_match = True
+                break
 
-    if len(testing_list[0]) > 1:
-        predicted_letter = testing_list[0][0]
-        confidence = testing_list[0][1]
-    else:
-        predicted_letter = "No prediction"
-        confidence = 0
+        # if len(testing_list[0]) > 1:
+        #     predicted_letter = testing_list[0][0]
+        #     confidence = testing_list[0][1]
+        # else:
+        #     predicted_letter = "No prediction"
+        #     confidence = 0
     runtime = end_time-start_time
+
 
     return_dict = {'Wanted_Letter': letter,
                    'is_match': is_match,
-                   'confidence': confidence,
-                   'predicted letter': predicted_letter,
+                   #'confidence': confidence,
+                   #'predicted letter': predicted_letter,
                    'runtime_seconds': runtime,
                    'full_predictions' : testing_list
                    }
 
-    testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime)
+    #testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime)
 
     X = json.dumps(return_dict)
     # print(Dictionary[letter])

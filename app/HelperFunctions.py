@@ -60,4 +60,3 @@ def create_uuid():
     """
     letters = string.ascii_letters
     return ''.join(random.choice(letters) for i in range(10))
-
