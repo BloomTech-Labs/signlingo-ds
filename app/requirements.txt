@@ -5,3 +5,4 @@ opencv-python==4.2.0.32
 jsonpickle==1.4.1
 pillow==7.1.2
 gunicorn==20.0.4
+ffmpeg-python

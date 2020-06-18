@@ -39,6 +39,9 @@ def api():
         return redirect(request.url)
     video = request.files['video']
     letter = request.form.get('expected')
+    rhanded = request.form.get('right-handed')
+    print(int(rhanded), int(rhanded) == 1)
+    rhanded = (int(rhanded) == 1)
     letter = letter.upper()
 
     # Checks to make sure the video has a filename.
@@ -64,7 +67,7 @@ def api():
     print(f"Total Splitter runtime - {(splitter_end_time - splitter_start_time):.2f} seconds")
 
     # Actual DS magic happens here.
-    classes, confidences = img_detector(uuid)
+    classes, confidences = img_detector(uuid, rhanded)
     predictions = list(zip(classes, confidences))
     clear_temp(uuid) # Helper function that clears both of the temporary folders.
     end_time = time.time()

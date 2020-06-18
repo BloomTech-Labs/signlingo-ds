@@ -1,5 +1,6 @@
 import numpy as np
 import argparse, time, os, cv2
+from PIL import Image, ImageOps
 #from memory_profiler import profile
 
 CONF_THRES=0.0001 # Confidence Threshold for detection reporting.
@@ -138,7 +139,7 @@ def get_prediction(image, net, LABELS, COLORS):
 
 
 
-def main(uuid):
+def main(uuid, rhanded):
     main_start_time = time.time()
     labels_path = os.path.join('model', LABELS)
     cfg_path = os.path.join('model', CFG)
@@ -159,7 +160,17 @@ def main(uuid):
     for img in os.listdir(pic_path):
         #if count == round(len(os.listdir(pic_path))/2): #Grabs the middle image for single image testing
 
-        image = cv2.imread(os.path.join(pic_path, img))
+
+        print("Right handed = ", (True == rhanded))
+        if not rhanded:
+            im = Image.open(os.path.join(pic_path, img))
+            print(im._getexif())
+            im = ImageOps.mirror(im)
+            im.save(os.path.join(pic_path, 'mirrored.jpg'), quality=50)
+            image = cv2.imread(os.path.join(pic_path, 'mirrored.jpg'))
+        else:
+            image = cv2.imread(os.path.join(pic_path, img))
+
 
         result_img, class_ids, confidences = get_prediction(image, nets, labels, colors)
         classes.append(class_ids)
@@ -167,9 +178,9 @@ def main(uuid):
 
         # print("Predicted class ids:", class_ids)
         # print("Predicted confidence levels", confidences)
-
-        # cv2.imshow("Image", result_img)
-        # cv2.waitKey()
+        #
+        cv2.imshow("Image", result_img)
+        cv2.waitKey()
         # count += 1
         # else:
         #     count += 1
