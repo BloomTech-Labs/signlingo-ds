@@ -78,7 +78,7 @@ def get_prediction(image, net, LABELS, COLORS):
     end = time.time()
 
     #Show timing info
-    print(f"[INFO] YOLO took {(end - start):.6f} seconds on net.forward step.")
+    #print(f"[INFO] YOLO took {(end - start):.6f} seconds on net.forward step.")
 
     #Initializing our list of bounding boxes, confidences, and class ids.
     b_boxes = []
@@ -133,7 +133,7 @@ def get_prediction(image, net, LABELS, COLORS):
 
             cv2.putText(image, text, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
     prediction_end_time = time.time()
-    print(f"Image prediction time {(prediction_end_time - prediction_start_time):.2f} seconds")
+    #print(f"Image prediction time {(prediction_end_time - prediction_start_time):.2f} seconds")
 
     return image, class_ids, confidences
 
@@ -179,14 +179,14 @@ def main(uuid, rhanded):
         # print("Predicted class ids:", class_ids)
         # print("Predicted confidence levels", confidences)
         #
-        cv2.imshow("Image", result_img)
-        cv2.waitKey()
+        # cv2.imshow("Image", result_img)
+        # cv2.waitKey()
         # count += 1
         # else:
         #     count += 1
 
     main_end_time = time.time()
-    print(f"Main loop finished in {(main_end_time - main_start_time):.2f} seconds")
+    #print(f"Main loop finished in {(main_end_time - main_start_time):.2f} seconds")
     return classes, confids
 
 

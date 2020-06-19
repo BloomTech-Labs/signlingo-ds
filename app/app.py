@@ -64,7 +64,7 @@ def api():
     for vid in os.listdir(vid_path):
         splitter(vid, uuid, frameskip=15) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
     splitter_end_time = time.time()
-    print(f"Total Splitter runtime - {(splitter_end_time - splitter_start_time):.2f} seconds")
+    #print(f"Total Splitter runtime - {(splitter_end_time - splitter_start_time):.2f} seconds")
 
     # Actual DS magic happens here.
     classes, confidences = img_detector(uuid, rhanded)
