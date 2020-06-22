@@ -1,12 +1,12 @@
-# Concurrency is a problem, and there will be a 502 error if two requests come in at the same time.
-
 from flask import Flask, request, render_template, flash, redirect, Response
 from werkzeug.utils import secure_filename
+# from memory_profiler import profile
 from flask import jsonify
-import os, time
+import os
+import time
 import random
 import json
-# from memory_profiler import profile
+
 
 from HelperFunctions import splitter, clear_temp, allowed_file, create_uuid
 from ModelFunctions import main as img_detector
@@ -20,12 +20,10 @@ if not os.path.isdir('TEMPPICS'):
 if not os.path.isdir('TEMPVID'):
     os.mkdir('TEMPVID')
 
-
-# Manual testing API endpoint
+# Manually testing API endpoint
 @app.route('/')
 def home():
     return render_template("index.html")
-
 
 @app.route('/api', methods=['POST'])
 def api():
@@ -46,7 +44,7 @@ def api():
     letter = request.form.get('expected')
     letter = letter.upper()
 
-    #This gets the handedness of the user, commented out for the time being and just assumes all photos are right handed.
+    # This gets the handedness of the user, commented out for the time being and just assumes all photos are right handed.
     # rhanded = request.form.get('right-handed')
     # print(int(rhanded), int(rhanded) == 1)
     # rhanded = (int(rhanded) == 1)
