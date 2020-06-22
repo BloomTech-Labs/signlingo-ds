@@ -9,16 +9,24 @@ import ffmpeg
 
 def splitter(video, uuid, frameskip=1):
     """
+    This function splits a video file into a number of images, in order to feed the model more effectively.
+
     Accepts a video file as first param.
-    frameskip must be an integer, only frames with a count % frameskip == 0 will be saved.
-    frameskip == 1 keeps all frames. frameskip == 2 drops every other frame, etc.
-    Outputs selected frames into TEMPPICS folder.
+
+    frameskip is used for tweaking the response time of the model. Higher frame skip numbers will mean faster runtimes,
+    but less predictions, which may make it harder to catch a correct prediction.
+    frameskip must be an integer, only frames with a count % frameskip = 0 will be saved.
+    frameskip = 1 keeps all frames. frameskip = 2 drops every other frame, etc.
+    Outputs selected frames into TEMPPICS/VID_(uuid) folder.
     """
     cap = cv2.VideoCapture(os.path.join('TEMPVID','VID_' + uuid, video))
     os.mkdir(os.path.join('TEMPPICS', 'PICS_' + uuid))
 
+    #Mobile devices always take videos in landscape mode and embed metadata to encode the rotation, but cv2 does not check this.
+    #This ends up resulting in images from mobile devices being sideways. The function below reads metadata for the correct rotation.
     rotate_code = check_rotation(os.path.join('TEMPVID','VID_' + uuid, video))
-    #rotate_code = cv2.ROTATE_90_COUNTERCLOCKWISE
+
+
     count = 0
     frame_list = []
     while (cap.isOpened()):
@@ -36,19 +44,9 @@ def splitter(video, uuid, frameskip=1):
     return frame_list
 
 
-def allowed_file(filename):
-    """
-    Returns true the file is of an appropriate type and has an appropriate name, otherwise returns false.
-    """
-    # Change if using videos of type other than mp4
-    allowed_extensions = {'mp4'}
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
-
 def clear_temp(uuid):
     """
-    Clears the entire contents of the TEMPVID and TEMPPICS folders.
+    Clears the entire contents of the TEMPVID/VID_(uuid) and TEMPPICS/PICS_(uuid) folders.
     """
     vid_path = os.path.join('TEMPVID', 'VID_' + uuid)
     for file in os.listdir(vid_path):
@@ -68,15 +66,15 @@ def create_uuid():
     return ''.join(random.choice(letters) for i in range(10))
 
 def check_rotation(path_video_file):
-    # this returns meta-data of the video file in form of a dictionary
-    # print(path_video_file)
-    # print('Exists? ',os.path.exists(path_video_file))
+    # This function utilizes ffmpeg-python, which requires ffmpeg to be installed on the system.
+    # https://www.ffmpeg.org
 
 
     meta_dict = ffmpeg.probe(path_video_file)
-    # from the dictionary, meta_dict['streams'][0]['tags']['rotate'] is the key
-    # we are looking for
     rotateCode = None
+
+    #The rotate tag is not in the same index every time, so we iterate over the indeces in order to find it.
+    #The loop below will return a cv2 rotate code if the image needs rotated. Otherwise returns None
     for index in meta_dict['streams']:
         if 'rotate' in index['tags'].keys():
             if int(index['tags']['rotate']) == 90:

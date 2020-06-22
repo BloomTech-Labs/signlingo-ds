@@ -1,5 +1,7 @@
 ### For use in model testing via webcam
 
+#This file should run all on its own. The only things that need to be edited are the WEBCAM_NUM and the name of the weights/cfg file.
+
 import cv2
 import numpy as np
 import argparse
@@ -9,17 +11,18 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--webcam', help="True/False", default=True)
 parser.add_argument('--play_video', help="True/False", default=False)
 parser.add_argument('--image', help="True/False", default=False)
-parser.add_argument('--video_path', help="Path of video file", default="videos/car_on_road.mp4")
-parser.add_argument('--image_path', help="Path of image to detect objects", default="Images/bicycle.jpg")
+# parser.add_argument('--video_path', help="Path of video file", default="videos/car_on_road.mp4")
+# parser.add_argument('--image_path', help="Path of image to detect objects", default="Images/bicycle.jpg")
 parser.add_argument('--verbose', help="To print statements", default=True)
 args = parser.parse_args()
 
+#Change this number until it picks up the webcam you want.
 WEBCAM_NUM = 2
 
 
 # Load yolo
 def load_yolo():
-    net = cv2.dnn.readNet("model/yolov3-tiny_custom_final.weights", "model/yolov3-tiny_custom_test.cfg")
+    net = cv2.dnn.readNet("model/yolov3-tiny_custom_last.weights", "model/yolov3-tiny_custom_test.cfg")
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
     classes = []

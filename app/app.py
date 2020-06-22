@@ -21,6 +21,7 @@ if not os.path.isdir('TEMPVID'):
     os.mkdir('TEMPVID')
 
 
+# Manual testing API endpoint
 @app.route('/')
 def home():
     return render_template("index.html")
@@ -28,50 +29,51 @@ def home():
 
 @app.route('/api', methods=['POST'])
 def api():
-    print("/api post request received")
     start_time = time.time()
 
-    uuid = create_uuid() # Helper function to create a unique identifier for this process.
+    # Helper function to create a unique identifier for this process. UUID is necessary to prevent conflicts.
+    uuid = create_uuid()
     
     # Checks to make sure a file was actually received with the key 'video'
     if 'video' not in request.files:
         flash('No file part')
         return redirect(request.url)
+
+    #Pulls the video from the request
     video = request.files['video']
+
+    #This is the letter that the front end is expecting
     letter = request.form.get('expected')
-    rhanded = request.form.get('right-handed')
-    print(int(rhanded), int(rhanded) == 1)
-    rhanded = (int(rhanded) == 1)
     letter = letter.upper()
 
-    # Checks to make sure the video has a filename.
-    # if video.filename == '':
-    #     flash('No Selected File')
-    #     return redirect(request.url)
+    #This gets the handedness of the user, commented out for the time being and just assumes all photos are right handed.
+    # rhanded = request.form.get('right-handed')
+    # print(int(rhanded), int(rhanded) == 1)
+    # rhanded = (int(rhanded) == 1)
+    rhanded = True
 
-    if video: # and allowed_file(video.filename): # If a video exists and it's of an appropriate type
-        print("Video Filename:", video.filename)
+
+    if video: # If a video exists
         filename = secure_filename(video.filename) # Apparently a good method to use to make sure no one can do silly things with filenames.
-        vid_path = os.path.join('TEMPVID', 'VID_'+ uuid)
-        print("Vid_path = ", vid_path)
+        vid_path = os.path.join('TEMPVID', 'VID_'+ uuid) #This will be the folder our temp vid lives in.
         os.mkdir(vid_path) # Creates the folder to be saved in.
         video.save(os.path.join(vid_path, 'test_' + filename)) #Saves our video file to the TEMPVID folder.
-    else:
+    else: #If the video does not exist, return.
         flash('File of incorrect type.')
         return redirect(request.url)
 
     splitter_start_time = time.time()
     for vid in os.listdir(vid_path):
-        splitter(vid, uuid, frameskip=15) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame.
+        splitter(vid, uuid, frameskip=15) #Frameskip allows us to designate that we only save frames with a count % frameskip. 1 saves every frame. See splitter docstring for more info.
     splitter_end_time = time.time()
     #print(f"Total Splitter runtime - {(splitter_end_time - splitter_start_time):.2f} seconds")
 
     # Actual DS magic happens here.
-    classes, confidences = img_detector(uuid, rhanded)
+    classes, confidences = img_detector(uuid, rhanded) #This is the function called 'main' in ModelFunctions.py
     predictions = list(zip(classes, confidences))
     clear_temp(uuid) # Helper function that clears both of the temporary folders.
-    end_time = time.time()
-    
+
+    #Dictionary for comparing the results of the model to a letter, or converting an expected letter to a number.
     Dictionary = {
         'A': 0,
         'B': 1,
@@ -102,13 +104,14 @@ def api():
     }
     inverse = {v:k for k, v in Dictionary.items()}
 
+
     testing_list = []
     print("Predictions-\n",predictions)
+
+    #The below for loop is for processing the predictions into the format we want it to be in.
     for double in predictions:
-        # print("Double", double)
         holding_array = []
         for individual in double:
-            # print("Individual", individual)
             if len(individual) != 0:
                 if individual[0] == int(individual[0]):
                     holding_array.append(inverse[individual[0]])
@@ -116,47 +119,34 @@ def api():
                     holding_array.append(float(individual[0]))
         testing_list.append(holding_array)
 
-    print("KLSDJFLJKFSADLJKFSADLKJSDAFLJKAFDSJLLDFJKSLKJ",testing_list)
-    #The line below only gets added if we have a true result... why?
-    #testing_list.append([f"Time of operation: {(end_time-start_time):.3f} seconds"])
-    #print("Testing List", testing_list)
-
-    model_contents = [x for x in os.listdir('model')]
-    model_params = [LABELS, WEIGHTS, CFG]
-
 
     # Check that predictions match expected
     is_match = False
 
+    #Currently this API only looks to see if the expected letter was predicted at all. Sets is_match to true if it finds a matching letter.
     for pred in testing_list:
         if len(pred) != 0:
             if letter == pred[0]:
                 is_match = True
                 break
 
-        # if len(testing_list[0]) > 1:
-        #     predicted_letter = testing_list[0][0]
-        #     confidence = testing_list[0][1]
-        # else:
-        #     predicted_letter = "No prediction"
-        #     confidence = 0
+    end_time = time.time()
     runtime = end_time-start_time
 
 
+    #Returned data looks like this when returned from the API.
+    #{"Wanted_Letter": "B", "is_match": true, "runtime_seconds": 3.5063774585723877,
+    #"full_predictions": [["B", 0.8875290751457214], ["B", 0.9751415252685547], ["B", 0.9301596283912659],
+    #                     ["B", 0.9111566543579102], ["B", 0.7824452519416809]]}
     return_dict = {'Wanted_Letter': letter,
                    'is_match': is_match,
-                   #'confidence': confidence,
-                   #'predicted letter': predicted_letter,
                    'runtime_seconds': runtime,
                    'full_predictions' : testing_list
                    }
 
-    #testing_list[0] = (letter, is_match, confidence, predicted_letter, runtime)
 
     X = json.dumps(return_dict)
-    # print(Dictionary[letter])
-    # print(testing_list[0][0])
-    # print('COOPER VOS IS E', is_match)
+
     return Response(X,  mimetype='application/json')
 
 if __name__ == '__main__':
