@@ -1,12 +1,23 @@
 #   TO BUILD IMAGE run the following from root (app)
-#   docker build . -t signlingo
+#   'docker build . -t signlingo'
+#   alternatively, pull from the dockerhub image here https://hub.docker.com/repository/docker/coopervos/beanstalk-flask
 #
 #   TO RUN
-#   docker run -d -p 5000:5000 signlingo
+#   'docker run -d -p 5000:5000 signlingo'
 #
 #   TO VIEW
 #   http://localhost:5000/
 
+#   TO DEPLOY using dockerrun.aws.json after building the image
+#   Navigate to remote-docker folder in your terminal and run the following commands using the eb CLI:
+#   ##################################################################################################
+#   'eb init -p docker signlingo --region us-east-1'
+#   'eb create signlingo-ds-test'
+#   'eb open'
+#   ##################################################################################################
+# 
+
+# START DOCKERFILE HERE
 # Probably don't need both images...but what's not broken don't fix.
 FROM ubuntu:16.04
 FROM python:3.7-slim
