@@ -1,6 +1,7 @@
-### For use in model testing via webcam
+# For use in model testing via webcam
 
-#This file should run all on its own. The only things that need to be edited are the WEBCAM_NUM and the name of the weights/cfg file.
+# This file should run all on its own.
+# The only things that need to be edited are the WEBCAM_NUM and the name of the weights/cfg file.
 
 import cv2
 import numpy as np
@@ -16,7 +17,7 @@ parser.add_argument('--image', help="True/False", default=False)
 parser.add_argument('--verbose', help="To print statements", default=True)
 args = parser.parse_args()
 
-#Change this number until it picks up the webcam you want.
+# Change this number until it picks up the webcam you want.
 WEBCAM_NUM = 2
 
 
@@ -25,14 +26,13 @@ def load_yolo():
     net = cv2.dnn.readNet("model/yolov3-tiny_custom_last.weights", "model/yolov3-tiny_custom_test.cfg")
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
-    classes = []
     with open("model/yolov3.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
     print(len(classes))
 
     layers_names = net.getLayerNames()
     output_layers = [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-    colors = np.random.uniform(0, 255, size=(len(classes)+50, 3))
+    colors = np.random.uniform(0, 255, size=(len(classes) + 50, 3))
     return net, classes, colors, output_layers
 
 
@@ -51,18 +51,18 @@ def start_webcam():
 
 
 def display_blob(blob):
-    '''
+    """
         Three images each for RED, GREEN, BLUE channel
-    '''
+    """
     for b in blob:
         for n, imgb in enumerate(b):
             cv2.imshow(str(n), imgb)
 
 
-def detect_objects(img, net, outputLayers):
+def detect_objects(img, net, output_layers):
     blob = cv2.dnn.blobFromImage(img, scalefactor=0.00392, size=(320, 320), mean=(0, 0, 0), swapRB=True, crop=False)
     net.setInput(blob)
-    outputs = net.forward(outputLayers)
+    outputs = net.forward(output_layers)
     return blob, outputs
 
 
@@ -95,7 +95,7 @@ def draw_labels(boxes, confs, colors, class_ids, classes, img):
         if i in indexes:
             x, y, w, h = boxes[i]
             label = str(classes[class_ids[i]]) + f"  {confs[i]:.4f}"
-            #color = colors[i]
+            # color = colors[i]
             color = (200, 100, 200)
             cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
             cv2.putText(img, label, (x, y - 5), font, 1, color, 1)
@@ -104,10 +104,10 @@ def draw_labels(boxes, confs, colors, class_ids, classes, img):
 
 def image_detect(img_path):
     model, classes, colors, output_layers = load_yolo()
-    image, height, width, channels = load_image(img_path)
-    blob, outputs = detect_objects(image, model, output_layers)
+    img, height, width, channels = load_image(img_path)
+    blob, outputs = detect_objects(img, model, output_layers)
     boxes, confs, class_ids = get_box_dimensions(outputs, height, width)
-    draw_labels(boxes, confs, colors, class_ids, classes, image)
+    draw_labels(boxes, confs, colors, class_ids, classes, img)
     while True:
         key = cv2.waitKey(1)
         if key == 27:
@@ -129,9 +129,9 @@ def webcam_detect():
     cap.release()
 
 
-def start_video(video_path):
+def start_video(vid_path):
     model, classes, colors, output_layers = load_yolo()
-    cap = cv2.VideoCapture(video_path)
+    cap = cv2.VideoCapture(vid_path)
     while True:
         _, frame = cap.read()
         height, width, channels = frame.shape

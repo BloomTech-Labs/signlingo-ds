@@ -5,8 +5,6 @@ import string
 import ffmpeg
 
 
-
-
 def splitter(video, uuid, frameskip=1):
     """
     This function splits a video file into a number of images, in order to feed the model more effectively.
@@ -19,24 +17,24 @@ def splitter(video, uuid, frameskip=1):
     frameskip = 1 keeps all frames. frameskip = 2 drops every other frame, etc.
     Outputs selected frames into TEMPPICS/VID_(uuid) folder.
     """
-    cap = cv2.VideoCapture(os.path.join('TEMPVID','VID_' + uuid, video))
+    cap = cv2.VideoCapture(os.path.join('TEMPVID', 'VID_' + uuid, video))
     os.mkdir(os.path.join('TEMPPICS', 'PICS_' + uuid))
 
-    #Mobile devices always take videos in landscape mode and embed metadata to encode the rotation, but cv2 does not check this.
-    #This ends up resulting in images from mobile devices being sideways. The function below reads metadata for the correct rotation.
-    rotate_code = check_rotation(os.path.join('TEMPVID','VID_' + uuid, video))
-
+    # Mobile devices take videos in landscape mode and embed metadata to encode the rotation, cv2 does not check this.
+    # This ends up resulting in images from mobile devices being sideways.
+    # The function below reads metadata for the correct rotation.
+    rotate_code = check_rotation(os.path.join('TEMPVID', 'VID_' + uuid, video))
 
     count = 0
     frame_list = []
-    while (cap.isOpened()):
+    while cap.isOpened():
         ret, frame = cap.read()
 
         if ret:
             if rotate_code is not None:
                 frame = cv2.rotate(frame, rotate_code)
             if count % frameskip == 0:
-                cv2.imwrite(os.path.join('TEMPPICS','PICS_' + uuid, 'frame{:d}.jpg'.format(count)), frame)
+                cv2.imwrite(os.path.join('TEMPPICS', 'PICS_' + uuid, 'frame{:d}.jpg'.format(count)), frame)
             count += 1
         else:
             break
@@ -58,6 +56,7 @@ def clear_temp(uuid):
         os.remove(os.path.join(pic_path, file))
     os.rmdir(pic_path)
 
+
 def create_uuid():
     """
     Generates a string of 10 characters to prevent concurrency conflicts.
@@ -65,27 +64,26 @@ def create_uuid():
     letters = string.ascii_letters
     return ''.join(random.choice(letters) for i in range(10))
 
+
 def check_rotation(path_video_file):
     # This function utilizes ffmpeg-python, which requires ffmpeg to be installed on the system.
     # https://www.ffmpeg.org
 
-
     meta_dict = ffmpeg.probe(path_video_file)
-    rotateCode = None
+    rotate_code = None
 
-    #The rotate tag is not in the same index every time, so we iterate over the indeces in order to find it.
-    #The loop below will return a cv2 rotate code if the image needs rotated. Otherwise returns None
+    # The rotate tag is not in the same index every time, so we iterate over the indeces in order to find it.
+    # The loop below will return a cv2 rotate code if the image needs rotated. Otherwise returns None
     for index in meta_dict['streams']:
         if 'rotate' in index['tags'].keys():
             if int(index['tags']['rotate']) == 90:
-                rotateCode = cv2.ROTATE_90_CLOCKWISE
+                rotate_code = cv2.ROTATE_90_CLOCKWISE
                 print('ROTATED 90 CLOCKWISE')
             elif int(index['tags']['rotate']) == 180:
-                rotateCode = cv2.ROTATE_180
+                rotate_code = cv2.ROTATE_180
                 print('ROTATED 180')
             elif int(index['tags']['rotate']) == 270:
-                rotateCode = cv2.ROTATE_90_COUNTERCLOCKWISE
+                rotate_code = cv2.ROTATE_90_COUNTERCLOCKWISE
                 print('ROTATED 90 COUNTERCLOCKWISE')
 
-    return rotateCode
-
+    return rotate_code
