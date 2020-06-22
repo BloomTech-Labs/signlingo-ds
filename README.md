@@ -21,19 +21,19 @@
 
 # Steps to run locally
 
-Create and navigate to a working directory and run the following.
-`git clone https://github.com/Lambda-School-Labs/signlingo-ds.git`
-`cd signlingo-ds/FlaskApp`
-Create a virtual environment.
-`pipenv shell --python 3.7`
-If the pip files are incorrectly installing the libraries into the environment, delete them and run the following
+Create and navigate to a working directory and run the following.  
+`git clone https://github.com/Lambda-School-Labs/signlingo-ds.git`  
+`cd signlingo-ds/FlaskApp`  
+Create a virtual environment.  
+`pipenv shell --python 3.7`  
+If the pip files are incorrectly installing the libraries into the environment, delete them and run the following  
 `pipenv install -r requirements.txt`
-Run the following to initialize the TEMPVID and TEMPPICS folders
-`python app.py`
-Launching the flask app (NOTE: depending on the terminal, export can be substituted for set)
-`export FLASK_APP=app.py`
-`flask run`
-
+Run the following to initialize the TEMPVID and TEMPPICS folders  
+`python app.py`  
+Launching the flask app (NOTE: depending on the terminal, export can be substituted for set)  
+`export FLASK_APP=app.py`  
+`flask run`  
+<br/>
 (Documentation on how to run using Docker can be found in the Dockerfile)
 
 
