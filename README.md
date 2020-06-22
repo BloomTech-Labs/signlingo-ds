@@ -45,7 +45,7 @@ Launching the flask app (NOTE: depending on the terminal, export can be substitu
 # AWS Elastic BeanStalk API
 
 - https://ds.thesignlingo.com/api
-- Expects three inputs with the following names
+- Expects a POST request with the following three inputs.
   - 'video' of type file
   - 'expected' of type string
   - 'right-handed' of type number (1 for right hand)
