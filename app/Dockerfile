@@ -1,12 +1,21 @@
+#   TO BUILD IMAGE run the following from root (app)
+#   docker build . -t signlingo
+#
+#   TO RUN
+#   docker run -d -p 5000:5000 signlingo
+#
+#   TO VIEW
+#   http://localhost:5000/
+
+# Probably don't need both images...but what's not broken don't fix.
 FROM ubuntu:16.04
 FROM python:3.7-slim
 
-
+# Python, pip, and packages necessary to install opencv
 RUN apt-get update -y && \
     apt-get install -y python3-pip python3-dev libglib2.0 libsm6 libxext6 libxrender-dev
 
-# Compile and install fresh ffmpeg from sources:
-# See: https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu
+# Compile and install ffmpeg from source
 RUN apt-get update -qq && apt-get -y install \
       autoconf \
       automake \
@@ -63,6 +72,7 @@ RUN mkdir -p ~/ffmpeg_sources ~/bin && cd ~/ffmpeg_sources && \
     hash -r
 RUN mv ~/bin/ffmpeg /usr/local/bin && mv ~/bin/ffprobe /usr/local/bin && mv ~/bin/ffplay /usr/local/bin
 
+# Installing requirements.txt libraries
 COPY ./requirements.txt /requirements.txt
 
 WORKDIR /
@@ -71,17 +81,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /
 
+# Running the flask app and exposing to port 5000
 ENTRYPOINT [ "python3" ]
 
 EXPOSE 5000
 CMD [ "app.py", "run" ]
-
-
-#   TO BUILD IMAGE FROM FOLDER THAT CONTAINS DOCKERFILE -> app
-#   docker build . -t coffee
-#
-#   TO RUN
-#   docker run -d -p 5000:5000 coffee
-#
-#   TO VIEW
-#   http://localhost:5000/

@@ -1,0 +1,12 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+     "Name": "coopervos/beanstalk-flask",
+     "Update": "true"
+    },
+    "Ports": [
+     {
+      "ContainerPort": "5000"
+     }
+    ]
+   }
