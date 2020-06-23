@@ -23,7 +23,7 @@ WEBCAM_NUM = 2
 
 # Load yolo
 def load_yolo():
-    net = cv2.dnn.readNet("model/yolov3-tiny_custom_last.weights", "model/yolov3-tiny_custom_test.cfg")
+    net = cv2.dnn.readNet("model/yolov3-tiny_custom_8000.weights", "model/yolov3-tiny_custom_test.cfg")
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
     with open("model/yolov3.names", "r") as f:
@@ -89,7 +89,7 @@ def get_box_dimensions(outputs, height, width):
 
 
 def draw_labels(boxes, confs, colors, class_ids, classes, img):
-    indexes = cv2.dnn.NMSBoxes(boxes, confs, 0.5, 0.4)
+    indexes = cv2.dnn.NMSBoxes(boxes, confs, 0.1, 0.05)
     font = cv2.FONT_HERSHEY_PLAIN
     for i in range(len(boxes)):
         if i in indexes:

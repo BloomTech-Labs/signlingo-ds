@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, flash, redirect, Response
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 # from memory_profiler import profile
 from flask import jsonify
@@ -7,11 +8,12 @@ import time
 import random
 import json
 
-from HelperFunctions import splitter, clear_temp, allowed_file, create_uuid
+from HelperFunctions import splitter, clear_temp, create_uuid
 from ModelFunctions import main as img_detector
 from ModelFunctions import LABELS, WEIGHTS, CFG
 
 app = Flask(__name__, template_folder='templates')
+CORS(app)
 
 # Multiple users will conflict. Transition to a generator/temporary memory solution.
 if not os.path.isdir('TEMPPICS'):

@@ -86,4 +86,7 @@ def check_rotation(path_video_file):
                 rotate_code = cv2.ROTATE_90_COUNTERCLOCKWISE
                 print('ROTATED 90 COUNTERCLOCKWISE')
 
+    if rotate_code is None:
+        print("NO ROTATION")
+
     return rotate_code
