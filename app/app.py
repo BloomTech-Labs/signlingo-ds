@@ -65,7 +65,7 @@ def api():
 
     # splitter_start_time = time.time()
     for vid in os.listdir(vid_path):
-        splitter(vid, uuid, frameskip=15)
+        splitter(vid, uuid, frameskip=3)
         # Frameskip allows us to designate that we only save frames with a count % frameskip.
         # 1 saves every frame. See splitter docstring for more info.
 

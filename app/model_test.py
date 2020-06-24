@@ -23,7 +23,7 @@ WEBCAM_NUM = 2
 
 # Load yolo
 def load_yolo():
-    net = cv2.dnn.readNet("model/yolov3-tiny_custom_8000.weights", "model/yolov3-tiny_custom_test.cfg")
+    net = cv2.dnn.readNet("model/yolov3-tiny_custom_34000.weights", "model/yolov3-tiny_custom_test.cfg")
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
     with open("model/yolov3.names", "r") as f:

@@ -68,8 +68,13 @@ def create_uuid():
 def check_rotation(path_video_file):
     # This function utilizes ffmpeg-python, which requires ffmpeg to be installed on the system.
     # https://www.ffmpeg.org
+    try:
+        meta_dict = ffmpeg.probe(path_video_file)
+    except ffmpeg.Error as e:
+        print('stdout', e.stdout.decode('utf8'))
+        print('stderr', e.stderr.decode('utf8'))
+        raise e
 
-    meta_dict = ffmpeg.probe(path_video_file)
     rotate_code = None
 
     # The rotate tag is not in the same index every time, so we iterate over the indeces in order to find it.

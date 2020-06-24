@@ -8,7 +8,7 @@ CONF_THRES = 0.0001  # Confidence Threshold for detection reporting.
 NMS_THRES = 0.1  # Non-Maxima Suppression threshold, shouldn't need to be changed.
 YOLO_PATH = "./"
 LABELS = 'yolov3.names'
-WEIGHTS = 'yolov3-tiny_custom_final.weights'
+WEIGHTS = 'yolov3-tiny_custom_34000.weights'
 CFG = 'yolov3-tiny_custom_test.cfg'
 
 
