@@ -37,9 +37,9 @@ Launching the flask app (NOTE: depending on the terminal, export can be substitu
 (Documentation on how to run using Docker can be found in the Dockerfile)
 
 
-# YoloV3 Alphabet Model
+# Google Drive containing models, testing, & data
 
-- Further documentation can be found in the google drive but maybe a breif overview of why we chose to use object detection, maybe go into drive layout breifly, talk about data and higher level model processes we followed.
+- Contact any of us for the login information.
 
 
 # AWS Elastic BeanStalk API
