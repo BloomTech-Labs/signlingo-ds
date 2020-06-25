@@ -50,3 +50,4 @@ Launching the flask app (NOTE: depending on the terminal, export can be substitu
   - 'expected' of type string
   - 'right-handed' of type number (1 for right hand)
 
+### Contact us on slack and we would be happy to get you upto speed sooner. Cooper Vos (coopervos1@gmail.com), Wesley Mountford (goe_horus@hotmail.com), & Ryan Mecking (rsmecking@gmail.com).
