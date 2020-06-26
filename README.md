@@ -50,4 +50,19 @@ Launching the flask app (NOTE: depending on the terminal, export can be substitu
   - 'expected' of type string
   - 'right-handed' of type number (1 for right hand)
 
+#too large body error on AWS and/or CORS error from frontend ->
+Typically to fix this error, you're meant to add files in the .ebextensions folder as we have done, but it did not seem to work for us. As a result, we had to SSH into the instance directly from the EB CLI and modify the proper file ourselves. Keep in mind you have to do this after every deployment as it will reset itself. (Try to figure out the .ebextensions issue if you can)
+Steps to resolve:
+- When you originally set up the EB CLI and initialize with eb init, you'll want to create a new keypair and use that to SSH into the instance.
+- eb ssh
+- sudo su (be VERY careful making any changes with this enabled, but I found it necessary to edit the files that needed editing)
+- cd /etc/nginx
+- nano nginx.conf
+- Lines to add:
+  - Directly under `http{` in the next line, indented to match the rest within it. `client_max_body_size 50M`
+  - Under `location / {` in the next line, add `add_header Access-Control-Allow-Origin *;` - This is to resolve CORS issues with requests coming from the front end.
+- Save and exit
+- On the AWS console (which you can access with `eb console`), click Actions and restart the app server. After this the changes should be active.
+
 ### Contact us on slack and we would be happy to get you upto speed sooner. Cooper Vos (coopervos1@gmail.com), Wesley Mountford (goe_horus@hotmail.com), & Ryan Mecking (rsmecking@gmail.com).
+
